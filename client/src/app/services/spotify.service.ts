@@ -6,6 +6,7 @@ import { TrackData } from '../data/track-data';
 import { ResourceData } from '../data/resource-data';
 import { ProfileData } from '../data/profile-data';
 import { TrackFeature } from '../data/track-feature';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,13 @@ export class SpotifyService {
     //Note: toPromise() is a deprecated function that will be removed in the future.
     //It's possible to do the assignment using lastValueFrom, but we recommend using toPromise() for now as we haven't
     //yet talked about Observables. https://indepth.dev/posts/1287/rxjs-heads-up-topromise-is-being-deprecated
-    return Promise.resolve();
+    return lastValueFrom(this.http.get(this.expressBaseUrl+endpoint)).then((response) => {
+      console.log("RESPONSE: " + response);
+      return response;
+    }, (err) => {
+      console.log("ERROR ENCOUNTERED");
+      return err;
+    })
   }
 
   aboutMe():Promise<ProfileData> {
