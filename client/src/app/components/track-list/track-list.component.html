@@ -5,9 +5,9 @@
 			<th scope="col">Track</th>
 			<th scope="col">Duration</th>
 			<!--TODO: Use *ngIf to hide if hideArtist is true-->
-			<th scope="col">Primary Artist</th>
+			<th *ngIf="hideArtist == false" scope="col">Primary Artist</th>
 			<!--TODO: Use *ngIf to hide if hideAlbum is true-->
-			<th scope="col">Album</th>
+			<th *ngIf="hideAlbum == false" scope="col">Album</th>
 		</tr>
 	</thead>
 	<tbody>

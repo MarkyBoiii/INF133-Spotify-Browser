@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ArtistData } from '../data/artist-data';
 import { AlbumData } from '../data/album-data';
@@ -6,8 +7,6 @@ import { TrackData } from '../data/track-data';
 import { ResourceData } from '../data/resource-data';
 import { ProfileData } from '../data/profile-data';
 import { TrackFeature } from '../data/track-feature';
-import { lastValueFrom } from 'rxjs';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -23,13 +22,15 @@ export class SpotifyService {
     //Note: toPromise() is a deprecated function that will be removed in the future.
     //It's possible to do the assignment using lastValueFrom, but we recommend using toPromise() for now as we haven't
     //yet talked about Observables. https://indepth.dev/posts/1287/rxjs-heads-up-topromise-is-being-deprecated
-    return lastValueFrom(this.http.get(this.expressBaseUrl+endpoint)).then((response) => {
-      console.log("RESPONSE: " + response);
+    
+    return firstValueFrom(this.http.get(this.expressBaseUrl + endpoint)).then((response) => {
+      // console.log("RESPONSE: " + response);
       return response;
     }, (err) => {
-      console.log("ERROR ENCOUNTERED");
       return err;
-    })
+    });
+
+    // return Promise.resolve();
   }
 
   aboutMe():Promise<ProfileData> {
@@ -44,6 +45,38 @@ export class SpotifyService {
     //Make sure you're encoding the resource with encodeURIComponent().
     //Depending on the category (artist, track, album), return an array of that type of data.
     //JavaScript's "map" function might be useful for this, but there are other ways of building the array.
+    
+    if (category === "artist") {
+      let artistArray:ArtistData[] = [];
+
+      return this.sendRequestToExpress('/search/artist/' + encodeURIComponent(resource)).then((data) => {
+        data["artists"]["items"].forEach((element) => {
+          artistArray.push(element);
+        });
+        return artistArray;
+      });
+    }
+
+    if (category === "album") {
+      let albumArray:AlbumData[] = [];
+      return this.sendRequestToExpress('/search/album/' + encodeURIComponent(resource)).then((data) => {
+        data["albums"]["items"].forEach((element) => {
+          albumArray.push(element);
+        });
+        return albumArray;
+      });
+    }
+
+    if (category === "track") {
+      let trackArray:TrackData[] = [];
+      return this.sendRequestToExpress('/search/track/' + encodeURIComponent(resource)).then((data) => {
+        data["tracks"]["items"].forEach((element) => {
+          trackArray.push(element);
+        });
+        return trackArray;
+      });
+    }
+
     return null as any;
   }
 
