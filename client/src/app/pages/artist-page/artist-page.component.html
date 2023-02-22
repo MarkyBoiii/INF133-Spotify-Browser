@@ -23,7 +23,7 @@
 <div *ngIf="artist" class="row">
 	<div class="col-6">
 		<h3>{{artist.name}}'s Albums</h3>
-		<app-carousel [resources]="albums" [carouselId]="'differntId'"></app-carousel>
+		<app-carousel [resources]="albums" carouselId="differntId"></app-carousel>
 		<!--TODO: Display a carousel component for the artist's albums. Bind carousel's resources and give it a static carouselId.-->
 	</div>
 	<div class="col-6">
