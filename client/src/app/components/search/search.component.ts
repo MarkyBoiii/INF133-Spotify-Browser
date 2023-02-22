@@ -23,7 +23,6 @@ export class SearchComponent implements OnInit {
   }
 
   search() {
-    console.log("YIPPEE");
     this.spotifyService.searchFor(this.searchCategory, this.searchString).then((result) => {
       console.log(result);
       this.resources = result;
