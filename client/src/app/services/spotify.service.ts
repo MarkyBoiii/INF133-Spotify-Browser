@@ -144,6 +144,10 @@ export class SpotifyService {
 
   getTrack(trackId:string):Promise<TrackData> {
     //TODO: use the track endpoint to make a request to express.
+    return this.sendRequestToExpress("/track/" + encodeURIComponent(trackId)).then((data) => {
+      return new TrackData(data); //Data is to take the form TrackData
+    })
+
     return null as any;
   }
 
