@@ -22,13 +22,10 @@ export class AlbumPageComponent implements OnInit {
   	this.albumId = this.route.snapshot.paramMap.get('id');
     this.spotifyService.getAlbum(this.albumId).then((result) => {
       this.album = result;
-      console.log(this.album);
     });
     this.spotifyService.getTracksForAlbum(this.albumId).then((result) => {
       this.tracks = result;
-      console.log("ALBUM PAGE COMPONENT:",this.tracks); 
     })
-  	//TODO: inject spotifyService and use it to get the album data and the tracks for the album
   }
 
 }
