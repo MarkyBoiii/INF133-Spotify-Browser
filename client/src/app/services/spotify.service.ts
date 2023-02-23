@@ -50,8 +50,8 @@ export class SpotifyService {
       let artistArray:ArtistData[] = [];
 
       return this.sendRequestToExpress('/search/artist/' + encodeURIComponent(resource)).then((data) => {
-        data["artists"]["items"].forEach((element) => {
-          artistArray.push(new ArtistData(element));
+        data["artists"]["items"].forEach((featent) => {
+          artistArray.push(new ArtistData(featent));
         });
         return artistArray;
       });
@@ -60,8 +60,8 @@ export class SpotifyService {
     if (category === "album") {
       let albumArray:AlbumData[] = [];
       return this.sendRequestToExpress('/search/album/' + encodeURIComponent(resource)).then((data) => {
-        data["albums"]["items"].forEach((element) => {
-          albumArray.push(new AlbumData(element));
+        data["albums"]["items"].forEach((featent) => {
+          albumArray.push(new AlbumData(featent));
         });
         return albumArray;
       });
@@ -70,8 +70,8 @@ export class SpotifyService {
     if (category === "track") {
       let trackArray:TrackData[] = [];
       return this.sendRequestToExpress('/search/track/' + encodeURIComponent(resource)).then((data) => {
-        data["tracks"]["items"].forEach((element) => {
-          trackArray.push(new TrackData(element));
+        data["tracks"]["items"].forEach((featent) => {
+          trackArray.push(new TrackData(featent));
         });
         return trackArray;
       });
@@ -92,8 +92,8 @@ export class SpotifyService {
   getRelatedArtists(artistId:string):Promise<ArtistData[]> {
     return this.sendRequestToExpress('/artist-related-artists/' + encodeURIComponent(artistId)).then((data) => {
       let relatedArtists:ArtistData[] = []; // array to store related artists in
-      data["artists"].forEach((element) => {
-        relatedArtists.push(new ArtistData(element)); // each track in the list of related artists pushed to the array
+      data["artists"].forEach((featent) => {
+        relatedArtists.push(new ArtistData(featent)); // each track in the list of related artists pushed to the array
       });
       return relatedArtists;
     });
@@ -103,8 +103,8 @@ export class SpotifyService {
   getTopTracksForArtist(artistId:string):Promise<TrackData[]> {
     return this.sendRequestToExpress('/artist-top-tracks/' + encodeURIComponent(artistId)).then((data) => {
       let topTracks:TrackData[] = []; // array to store top tracks in
-      data["tracks"].forEach((element) => {
-        topTracks.push(new TrackData(element)); // each track in the list of top tracks is pushed to the array
+      data["tracks"].forEach((featent) => {
+        topTracks.push(new TrackData(featent)); // each track in the list of top tracks is pushed to the array
       });
       return topTracks;
     });
@@ -114,8 +114,8 @@ export class SpotifyService {
   getAlbumsForArtist(artistId:string):Promise<AlbumData[]> {
     return this.sendRequestToExpress('/artist-albums/' + encodeURIComponent(artistId)).then((data) => {
       let albums:AlbumData[] = []; // array to store albums in
-      data["items"].forEach((element) => {
-        albums.push(new AlbumData(element)); // each album in the list of albums pushed to array
+      data["items"].forEach((featent) => {
+        albums.push(new AlbumData(featent)); // each album in the list of albums pushed to array
       });
       return albums;
     })
@@ -138,8 +138,8 @@ export class SpotifyService {
       console.log("stop",data);
       albumTracks = data["items"];
       console.log("final one",albumTracks);
-      albumTracks.forEach((element) => {
-        this.sendRequestToExpress('/track/' + encodeURIComponent(element.id)).then((result) => {
+      albumTracks.forEach((featent) => {
+        this.sendRequestToExpress('/track/' + encodeURIComponent(featent.id)).then((result) => {
           tracklist.push(new TrackData(result));
         });
       });
@@ -150,8 +150,8 @@ export class SpotifyService {
     console.log("HI");
     console.log("THISONEHERE:",albumTracks["items"]);
 
-    //  data["items"].forEach((element) => {
-    //    this.sendRequestToExpress('/track/' + encodeURIComponent(element.id)).then((x) => {
+    //  data["items"].forEach((featent) => {
+    //    this.sendRequestToExpress('/track/' + encodeURIComponent(featent.id)).then((x) => {
      //     tracklist.push(new TrackData(x));
      //   });
     
@@ -175,6 +175,22 @@ export class SpotifyService {
 
   getAudioFeaturesForTrack(trackId:string):Promise<TrackFeature[]> {
     //TODO: use the audio features for track endpoint to make a request to express.
+    return this.sendRequestToExpress("/track-audio-features/" + encodeURIComponent(trackId)).then((data) => {
+      console.log("SHOWING TRACK FEATURES:");
+      console.log(data);
+
+      //The array that will hold the data of track features.
+      let trackFeatures:TrackFeature[]=[];
+      //Looking at TrackFeature from data, it has a static property that enumerates all the features visible in a track.
+      //Loop through those, then push it onto our new array trackFeatures
+      TrackFeature.FeatureTypes.forEach((feat) => {
+        trackFeatures.push(new TrackFeature(feat, data[feat]));
+      })
+
+      console.log(trackFeatures);
+
+      return trackFeatures;
+    })
     return null as any;
   }
 }
