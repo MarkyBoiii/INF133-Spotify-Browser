@@ -12,6 +12,6 @@
 <!--TODO: Display a carousel component if searching for an artist or album. Bind carousel's resources and give it a static carouselId.-->
 <!--TODO: Display a track-list component if searching for a track. Bind track-list's tracks.-->
 <app-carousel *ngIf="searchCategory != 'track'" [resources]="resources" carouselId="carouselId"></app-carousel>
-<app-track-list *ngIf="searchCategory == 'track'" [tracks]="resources" ></app-track-list>
+<app-track-list *ngIf="searchCategory == 'track'" [tracks]="resources"></app-track-list>
 
 
