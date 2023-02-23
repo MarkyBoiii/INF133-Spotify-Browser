@@ -131,37 +131,17 @@ export class SpotifyService {
   }
 
   getTracksForAlbum(albumId:string):Promise<TrackData[]> {
-    //console.log("LOOKING:", this.getAlbum(albumId));
-    let tracklist:TrackData[] = [];
-    let albumTracks;
+    let tracklist:TrackData[] = []; // array to hold the tracks
+    let albumTracks; // temporary holder var
     return this.sendRequestToExpress('/album-tracks/' + encodeURIComponent(albumId)).then((data) => {
-      console.log("stop",data);
-      albumTracks = data["items"];
-      console.log("final one",albumTracks);
+      albumTracks = data["items"]; // album tracks holds the list of tracks on the albums
       albumTracks.forEach((element) => {
         this.sendRequestToExpress('/track/' + encodeURIComponent(element.id)).then((result) => {
-          tracklist.push(new TrackData(result));
+          tracklist.push(new TrackData(result)); //each track is turned into a TrackData object and pushed to tracklist
         });
       });
-      console.log("THIS IS THE TRACKLIST:",tracklist);
       return tracklist;
-      return null as any;
     });
-    console.log("HI");
-    console.log("THISONEHERE:",albumTracks["items"]);
-
-    //  data["items"].forEach((element) => {
-    //    this.sendRequestToExpress('/track/' + encodeURIComponent(element.id)).then((x) => {
-     //     tracklist.push(new TrackData(x));
-     //   });
-    
-    //  this.getAlbum(albumId).then((result) => {
-    //    console.log("LOOKING:",result.id);
-    ///  });
-    
-    console.log("TRACKLIST:",tracklist);
-    //TODO: use the tracks for album endpoint to make a request to express.
-    return null as any;
   }
 
   getTrack(trackId:string):Promise<TrackData> {
